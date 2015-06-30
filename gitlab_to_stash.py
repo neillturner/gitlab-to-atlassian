@@ -136,11 +136,14 @@ def main(argv=None):
     skipped_count = 0
     print('Processing GitLab projects...', file=sys.stderr)
     sys.stderr.flush()
-    for project in gen_all_results(git.getallprojects,
+    for project in gen_all_results(git.getprojects,
                                    per_page=args.page_size):
         print('\n' + ('=' * 80) + '\n', file=sys.stderr)
         sys.stderr.flush()
         proj_name = project['namespace']['name']
+        print('project "%s" ' %
+                  (proj_name), end="", file=sys.stderr)
+        sys.stderr.flush()
         # Create Stash project if it doesn't already exist
         if proj_name not in stash_project_names:
             # Create Stash project key
@@ -244,7 +247,8 @@ def main(argv=None):
                 skipped_count += 1
             else:
                 # Change remote to Stash and push
-                print('\nPushing repository to Stash...', file=sys.stderr)
+                print('\nPushing repository "%s" to Stash...' %
+                  (stash_repo_url), file=sys.stderr)
                 sys.stderr.flush()
                 subprocess.check_call(['git', 'remote', 'set-url', 'origin',
                                        stash_repo_url])

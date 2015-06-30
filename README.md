@@ -114,6 +114,48 @@ optional arguments:
 - [Stashy](https://github.com/RisingOak/stashy) Python library
 - Admin access to GitLab is necessary to export private repositories
 
+## Example Install on Centos 6.x
+
+### Install python 3 and python module pre-requisites
+```
+ yum install centos-release-SCL
+ yum install python33
+ scl -l
+ scl enable python33 bash
+ python --version
+ curl https://raw.githubusercontent.com/pypa/pip/master/contrib/get-pip.py
+ chmod a+x ./get-pip.py
+ ./get-pip.py
+ pip install pyapi-gitlab
+ pip install stashy
+ copy gitlab_to_stash.py from https://github.com/EducationalTestingService/gitlab-to-atlassian/blob/master/gitlab_to_stash.py
+ chmod a+x ././gitlab_to_stash.py
+``` 
+### setup ssh access
+ ```
+ create config file to /root/.ssh containing the Following:
+ ```
+ ```
+ Host mygitlab.com
+     HostName                  mygitlab.com
+     User                      git
+     IdentityFile              /root/.ssh/my_private_key.pem
+     PasswordAuthentication    no
+ Host mystash.com
+     HostName                  mystash.com
+     User                      git
+     IdentityFile              /root/.ssh/my_private_key.pem
+    PasswordAuthentication    no    
+ ```
+ ```
+ cp my_private_key.pem to /root/.ssh
+ chmod 600 my_private_key.pem
+ ```
+### run migration
+```
+scl enable python33 bash
+./gitlab_to_stash.py -u adminuser -p adminpass -v http://mygitlab.com  http://mystash.com
+``` 
 ## License
 
 New BSD License (3-clause)
